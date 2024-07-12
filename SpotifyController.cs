@@ -16,7 +16,7 @@ class SpotifyController
         _clientId = configuration["spotifyClientId"];
         _clientSecret = configuration["spotifyClientSecret"];
 
-        if (_clientId is not null & _clientSecret is not null) {
+        if (_clientId is not null && _clientSecret is not null) {
             var contentMap = new Dictionary<string, string>
             {
                 { "client_id", _clientId },
