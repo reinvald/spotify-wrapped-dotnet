@@ -1,11 +1,13 @@
 using System;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 class SpotifyController
 {
 
     private static string ?_clientId;
     private static string ?_clientSecret;
+    private static string ?_accessToken;
     
     public static async Task RequestAccessTokenAsync(HttpClient client)
     {
@@ -26,9 +28,15 @@ class SpotifyController
 
             var content = new FormUrlEncodedContent(contentMap);
             HttpResponseMessage response = await client.PostAsync("https://accounts.spotify.com/api/token", content);
-            var responseString = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
 
-            Console.Write(responseString);
+            var jsonResponseString = await response.Content.ReadAsStringAsync();
+            var responseObject = JsonConvert.DeserializeObject<dynamic>(jsonResponseString)!;
+
+            _accessToken = responseObject.access_token;
+
+            Console.WriteLine($"Access Token: {responseObject.access_token}");
+
         }
 
     }
